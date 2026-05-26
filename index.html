@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gemini English Speech Studio Pro</title>
+    <title>Gemini English Speech Studio Pro v2.1</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -33,15 +33,17 @@
         .replaceable-word {
             position: relative;
             cursor: pointer;
-            border-bottom: 2px dashed #10b981;
-            background-color: rgba(16, 185, 129, 0.08);
-            padding: 1px 4px;
-            border-radius: 4px;
+            border-bottom: 3px dashed #10b981;
+            background-color: rgba(16, 185, 129, 0.12);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-weight: 600;
             transition: all 0.2s ease;
         }
         .replaceable-word:hover {
-            background-color: rgba(16, 185, 129, 0.18);
+            background-color: rgba(16, 185, 129, 0.25);
             color: #34d399;
+            transform: scale(1.05);
         }
         /* Custom tabs transition */
         .tab-content {
@@ -63,16 +65,24 @@
                 </div>
                 <div>
                     <h1 class="text-sm md:text-base font-bold bg-gradient-to-r from-white via-slate-200 to-emerald-200 bg-clip-text text-transparent tracking-tight">
-                        Gemini English Speech Studio <span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.2 rounded ml-1 font-mono">PRO</span>
+                        Gemini English Speech Studio <span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.2 rounded ml-1 font-mono">PRO v2.1</span>
                     </h1>
-                    <p class="hidden sm:block text-[10px] text-slate-400">英語TTS ＆ A2やさしい添削 ＆ 類義語置換・発音スタジオ</p>
+                    <p class="hidden sm:block text-[10px] text-slate-400">英語TTS ＆ ベース型3段階添削 ＆ コロケーション重視類義語置換</p>
                 </div>
             </div>
             
-            <!-- Secure Auto Status Badge (No manual key needed anymore) -->
-            <div class="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg text-[10px] text-emerald-300 font-bold">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Gemini API 自動接続中</span>
+            <!-- Dynamic API Setting Trigger for Students -->
+            <div class="flex items-center gap-2">
+                <!-- Status indicator -->
+                <div id="api-status-badge" class="hidden sm:flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg text-[10px] text-emerald-300 font-bold">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span id="api-status-text">キー接続中</span>
+                </div>
+                <!-- Interactive Action Button -->
+                <button id="btn-api-config" class="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer">
+                    <i class="fa-solid fa-key text-amber-400 animate-bounce"></i>
+                    <span>APIキー設定</span>
+                </button>
             </div>
         </div>
     </header>
@@ -94,7 +104,7 @@
                         <button id="btn-demo" class="text-[10px] text-emerald-400 hover:text-emerald-300 transition-colors flex items-center gap-1 px-2 py-0.5 bg-emerald-500/5 hover:bg-emerald-500/10 rounded">
                             <i class="fa-solid fa-lightbulb"></i>例文
                         </button>
-                        <button id="btn-demo-error" class="text-[10px] text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1 px-2 py-0.5 bg-amber-500/5 hover:bg-amber-500/10 rounded" title="文法間違いのある初級者向けの文をセットします">
+                        <button id="btn-demo-error" class="text-[10px] text-amber-400 hover:text-amber-300 transition-colors flex items-center gap-1 px-2 py-0.5 bg-amber-500/5 hover:bg-amber-500/10 rounded" title="文法間違いのある文をセットします">
                             <i class="fa-solid fa-triangle-exclamation"></i>間違い文
                         </button>
                         <button id="btn-clear" class="text-[10px] text-slate-500 hover:text-rose-400 transition-colors flex items-center gap-1 ml-1">
@@ -274,15 +284,15 @@
             <!-- Study tab options -->
             <div class="bg-slate-900 border border-slate-800/80 rounded-2xl shadow-xl flex flex-col overflow-hidden">
                 <div class="flex border-b border-slate-800 bg-slate-950/40 p-1.5 gap-1">
-                    <button class="tab-trigger flex-1 py-2 px-2 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" data-tab="tab-analysis">
+                    <button class="tab-trigger flex-1 py-2 px-1 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" data-tab="tab-analysis">
                         <i class="fa-solid fa-user-graduate"></i>
-                        <span>AIやさしい添削</span>
+                        <span>AIレベル別添削</span>
                     </button>
-                    <button class="tab-trigger flex-1 py-2 px-2 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 text-slate-400 hover:text-slate-200" data-tab="tab-replacer">
+                    <button class="tab-trigger flex-1 py-2 px-1 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 text-slate-400 hover:text-slate-200" data-tab="tab-replacer">
                         <i class="fa-solid fa-arrows-spin"></i>
                         <span>類義語置換</span>
                     </button>
-                    <button class="tab-trigger flex-1 py-2 px-2 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 text-slate-400 hover:text-slate-200" data-tab="tab-shadowing">
+                    <button class="tab-trigger flex-1 py-2 px-1 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 text-slate-400 hover:text-slate-200" data-tab="tab-shadowing">
                         <i class="fa-solid fa-microphone"></i>
                         <span>発音チェック</span>
                     </button>
@@ -290,20 +300,40 @@
 
                 <!-- Tab 1: AI Correction & Grammar Analysis Content -->
                 <div id="tab-analysis" class="tab-content active p-4 space-y-3.5">
-                    <div class="flex justify-between items-center gap-2">
+                    
+                    <!-- 3-level selection header -->
+                    <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-850/60 flex flex-col gap-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">AI添削指導の難易度設定 (ベース尊重型)</span>
+                        <div class="grid grid-cols-3 gap-1">
+                            <button id="btn-mode-easy" class="py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" data-mode="easy">
+                                <i class="fa-solid fa-feather-pointed text-[10px]"></i>
+                                <span>初級 (A1-A2)</span>
+                            </button>
+                            <button id="btn-mode-medium" class="py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-slate-900 text-slate-400 border border-slate-800" data-mode="medium">
+                                <i class="fa-solid fa-graduation-cap text-[10px]"></i>
+                                <span>中級 (B1)</span>
+                            </button>
+                            <button id="btn-mode-hard" class="py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-slate-900 text-slate-400 border border-slate-800" data-mode="hard">
+                                <i class="fa-solid fa-brain text-[10px]"></i>
+                                <span>上級 (B2-C1)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center gap-2 pt-1">
                         <div class="space-y-0.5">
                             <h3 class="text-xs font-bold text-slate-200 flex items-center gap-1">
                                 <i class="fa-solid fa-wand-magic-sparkles text-emerald-400"></i>
-                                AI A2レベルやさしい添削 ＆ 解説
+                                <span id="analysis-title-text">AI 初級ベース型やさしい添削 ＆ 解説</span>
                             </h3>
                         </div>
-                        <button id="btn-get-analysis" class="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 rounded-lg text-[10px] font-bold transition flex items-center gap-1 border border-emerald-500/20">
+                        <button id="btn-get-analysis" class="px-3.5 py-1.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white hover:text-white rounded-lg text-[10px] font-bold transition flex items-center gap-1 shadow">
                             <i class="fa-solid fa-wand-magic-sparkles" id="analysis-icon"></i>
-                            <span>添削＆解説</span>
+                            <span>添削＆解説を開始</span>
                         </button>
                     </div>
 
-                    <!-- AI Output Views (A2 Tailored Grid) -->
+                    <!-- AI Output Views (Adaptive level) -->
                     <div id="analysis-output-container" class="hidden space-y-3">
                         
                         <!-- Step 1: Praise Coach Box -->
@@ -325,18 +355,18 @@
                                 <div id="analysis-original-text" class="bg-slate-950 border border-slate-900 p-2.5 rounded-xl text-xs leading-relaxed text-slate-400 italic"></div>
                             </div>
                             
-                            <!-- AI Recommended Friendly (A2 Level constrained) -->
+                            <!-- AI Recommended Friendly (Constrained level) -->
                             <div class="space-y-1">
-                                <div class="flex justify-between items-center">
-                                    <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
-                                        <span class="w-1 h-1 rounded-full bg-emerald-400"></span> おすすめの英語 (A2)
-                                    </span>
-                                    <!-- Apply rewrite directly to editor -->
-                                    <button id="btn-apply-correction" class="text-[9px] bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 px-1.5 py-0.2 rounded transition flex items-center gap-0.5" title="この文章を入力欄にコピーします">
-                                        <i class="fa-solid fa-file-import"></i> 反映する
-                                    </button>
-                                </div>
-                                <div id="analysis-corrected-text" class="bg-slate-950 border border-emerald-500/20 p-2.5 rounded-xl text-xs leading-relaxed text-emerald-300 font-bold italic"></div>
+                                <span class="text-[9px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                                    <span class="w-1 h-1 rounded-full bg-emerald-400"></span> AI添削結果（あなたの表現を最大活用！）
+                                </span>
+                                <div id="analysis-corrected-text" class="bg-slate-950 border border-emerald-500/20 p-3 rounded-xl text-xs leading-relaxed text-emerald-300 font-bold italic"></div>
+                                
+                                <!-- IMPROVED: Enormous conspicuous action button -->
+                                <button id="btn-apply-correction" class="w-full mt-2.5 py-3 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 active:scale-[0.99] border border-emerald-500/30 text-white font-extrabold rounded-xl shadow-lg shadow-emerald-500/10 text-xs transition flex items-center justify-center gap-2 cursor-pointer" title="この文章を元の入力欄にセットします">
+                                    <i class="fa-solid fa-circle-check text-sm text-emerald-200 animate-pulse"></i>
+                                    <span>👉 この添削結果を入力欄に反映（音声に設定）</span>
+                                </button>
                             </div>
                         </div>
 
@@ -370,7 +400,7 @@
                     <!-- Empty State Analysis -->
                     <div id="analysis-empty-state" class="p-4 bg-slate-950/40 rounded-xl border border-slate-900 text-center text-xs text-slate-500 space-y-1">
                         <i class="fa-solid fa-user-graduate text-base text-slate-700"></i>
-                        <p>「添削＆解説」ボタンから、A2学習者向けの最適アドバイスを生成できます。</p>
+                        <p>「添削＆解説」ボタンから、学習難易度に応じたアドバイスを生成できます。</p>
                     </div>
                 </div>
 
@@ -380,33 +410,33 @@
                         <div class="space-y-0.5">
                             <h3 class="text-xs font-bold text-slate-200 flex items-center gap-1">
                                 <i class="fa-solid fa-spell-check text-emerald-400"></i>
-                                Smart Word Replacer
+                                Smart Word Replacer (コロケーション完全適合型)
                             </h3>
                         </div>
-                        <button id="btn-scan-synonyms" class="px-2.5 py-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 rounded-lg text-[10px] font-bold transition flex items-center gap-1 border border-emerald-500/20">
+                        <button id="btn-scan-synonyms" class="px-2.5 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 hover:text-emerald-300 rounded-lg text-[10px] font-bold transition flex items-center gap-1 border border-emerald-500/20">
                             <i class="fa-solid fa-arrows-spin" id="scan-icon"></i>
-                            <span>類義語を探す</span>
+                            <span>日常表現・類義語を探す</span>
                         </button>
                     </div>
 
                     <!-- Live Interactive Substitution Area -->
                     <div id="replacement-output-container" class="hidden space-y-3">
                         <div class="p-2.5 bg-emerald-500/5 rounded-lg border border-emerald-500/10 text-[10px] text-emerald-300 flex items-start gap-1.5 leading-relaxed">
-                            <i class="fa-solid fa-circle-info mt-0.5"></i>
-                            <span>下線単語をクリックすると類義語を一覧表示。選択して書き換えます。</span>
+                            <i class="fa-solid fa-circle-info mt-0.5 text-emerald-400"></i>
+                            <span>下線がついた単語をタップすると、<b>前後の言葉に100%自然に適合する</b>表現を下に表示します。</span>
                         </div>
 
                         <!-- Render Area with highlights -->
-                        <div id="interactive-text-display" class="bg-slate-950 border border-slate-900 rounded-xl p-3 text-xs md:text-sm leading-relaxed text-slate-200 select-none"></div>
+                        <div id="interactive-text-display" class="bg-slate-950 border border-slate-900 rounded-xl p-4 text-xs md:text-sm leading-relaxed text-slate-200 select-none"></div>
                         
-                        <!-- Bubble details on hover/click -->
-                        <div id="replacement-detail-box" class="hidden p-2.5 bg-slate-950 border border-slate-800 rounded-lg text-xs space-y-1"></div>
+                        <!-- IMPROVED: Enlarged popover detail box with massive touchscreen touch targets -->
+                        <div id="replacement-detail-box" class="hidden p-3.5 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-2"></div>
                     </div>
 
                     <!-- Empty State Replacement Panel -->
                     <div id="replacement-empty-state" class="p-4 bg-slate-950/40 rounded-xl border border-slate-900 text-center text-xs text-slate-500 space-y-1">
                         <i class="fa-solid fa-magnifying-glass text-base text-slate-700"></i>
-                        <p>英文を入力し、「類義語を探す」をクリックしてください。</p>
+                        <p>英文を入力し、「日常表現・類義語を探す」をクリックしてください。</p>
                     </div>
                 </div>
 
@@ -419,15 +449,6 @@
                         </h3>
                     </div>
 
-                    <div class="bg-slate-950 border border-slate-900 rounded-xl p-3 space-y-1.5">
-                        <div class="flex justify-between items-center">
-                            <span class="text-[10px] font-semibold text-slate-400">お手本（入力された文）</span>
-                        </div>
-                        <div id="shadowing-target" class="text-xs font-medium text-slate-300 leading-relaxed italic">
-                            (上のテキストエリアに入力した英語が判定対象になります)
-                        </div>
-                    </div>
-
                     <!-- Speech Recognition Controls -->
                     <div class="grid grid-cols-1 gap-3">
                         <div class="space-y-1.5">
@@ -436,18 +457,30 @@
                                 <span id="mic-status" class="text-slate-500 flex items-center gap-1"><span class="w-1 h-1 bg-slate-700 rounded-full"></span> 待機中</span>
                             </div>
                             <!-- Mic button -->
-                            <button id="btn-mic" class="w-full py-2.5 bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 rounded-lg font-bold flex items-center justify-center gap-1.5 transition text-xs active:scale-[0.98] cursor-pointer">
-                                <i class="fa-solid fa-microphone text-emerald-500" id="mic-icon"></i>
+                            <button id="btn-mic" class="w-full py-3 bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 rounded-lg font-bold flex items-center justify-center gap-1.5 transition text-xs active:scale-[0.98] cursor-pointer">
+                                <i class="fa-solid fa-microphone text-emerald-500 text-sm" id="mic-icon"></i>
                                 <span id="btn-mic-text">マイクをオンにして音読</span>
                             </button>
                         </div>
 
                         <!-- Recognition Output details -->
                         <div class="space-y-1">
-                            <span class="text-[10px] font-semibold text-slate-400">認識された結果</span>
-                            <div id="mic-result-box" class="h-10 bg-slate-950 border border-slate-900 rounded-lg p-2 text-[11px] text-slate-500 overflow-y-auto italic">
+                            <span class="text-[10px] font-semibold text-slate-400">あなたの音声の読み取り結果</span>
+                            <div id="mic-result-box" class="h-12 bg-slate-950 border border-slate-900 rounded-lg p-2.5 text-[11px] text-slate-500 overflow-y-auto italic">
                                 音声の読み取り結果がここに表示されます...
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- IMPROVED: Visual feedback board with red/green highlights -->
+                    <div class="bg-slate-950 border border-slate-900 rounded-xl p-3.5 space-y-2">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">ビジュアル発音分析フィードバック</span>
+                        <div id="shadowing-feedback-rendered" class="text-xs md:text-sm font-semibold tracking-wide leading-relaxed bg-slate-900/60 p-3 rounded-lg border border-slate-850 min-h-[48px]">
+                            <span class="text-slate-500 italic">マイクで音読すると、うまく読めた部分が「緑」、聞き取れなかった部分が「赤」でハイライト表示されます。</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-[10px] text-slate-400">
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-emerald-500"></span> 発音OK</span>
+                            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-rose-500"></span> 要練習</span>
                         </div>
                     </div>
 
@@ -457,7 +490,7 @@
                             <span class="text-[10px] font-bold text-emerald-400 flex items-center gap-0.5"><i class="fa-solid fa-star"></i> 発音評価判定</span>
                             <p id="shadowing-feedback-message" class="text-[10px] text-slate-200 leading-normal"></p>
                         </div>
-                        <div class="flex flex-col items-center justify-center bg-slate-950 border border-slate-850 w-16 h-16 rounded-full shadow">
+                        <div class="flex flex-col items-center justify-center bg-slate-950 border border-slate-855 w-16 h-16 rounded-full shadow">
                             <span id="shadowing-score-num" class="text-xl font-extrabold text-emerald-400 leading-none">0</span>
                             <span class="text-[8px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Score %</span>
                         </div>
@@ -492,6 +525,56 @@
         </div>
     </main>
 
+    <!-- API Key Settings Modal (Saves to client LocalStorage securely) -->
+    <div id="api-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm hidden">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-5 md:p-6 shadow-2xl flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="text-sm md:text-base font-bold text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-key text-amber-400"></i>
+                    Gemini APIキー設定
+                </h3>
+                <button id="btn-close-modal" class="text-slate-400 hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <p class="text-[11px] leading-relaxed text-slate-400">
+                本アプリは、Googleの最新AI「Gemini API」を直接呼んで音声や添削を出力します。
+                入力したキーは一切の外部サーバーに送信されず、<strong class="text-amber-400">お使いのスマホ（ブラウザ）の内部ストレージにのみ安全に保存されます</strong>。
+            </p>
+
+            <div class="space-y-2">
+                <label for="api-key-input" class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">APIキーを入力</label>
+                <div class="relative">
+                    <input type="password" id="api-key-input" placeholder="AIzaSy..." 
+                        class="w-full bg-slate-950 border border-slate-800 focus:border-emerald-500 rounded-xl py-2.5 pl-3 pr-10 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-500/20 transition-all">
+                    <button id="btn-toggle-key-visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition">
+                        <i class="fa-solid fa-eye text-xs" id="eye-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-900 space-y-1 text-[10px] text-slate-500">
+                <p class="font-semibold text-slate-400 flex items-center gap-1">
+                    <i class="fa-solid fa-circle-info text-emerald-500"></i> キーをまだ持っていない場合：
+                </p>
+                <p>Google AI Studio（完全無料）から即時1分でキーを新規発行できます。</p>
+                <a href="https://aistudio.google.com/" target="_blank" class="text-emerald-400 hover:underline font-bold inline-block mt-0.5">
+                    無料でAPIキーを取得する（公式） <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
+                </a>
+            </div>
+
+            <div class="flex gap-2 pt-2 border-t border-slate-800">
+                <button id="btn-save-key" class="flex-1 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl text-xs transition shadow-md cursor-pointer">
+                    キーをスマホに保存
+                </button>
+                <button id="btn-delete-key" class="py-2 px-3 border border-slate-800 hover:bg-rose-500/10 text-slate-500 hover:text-rose-400 font-bold rounded-xl text-xs transition cursor-pointer" title="消去">
+                    消去
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Floating Alerts Area -->
     <div id="toast-stack" class="fixed bottom-4 right-4 z-50 flex flex-col gap-1.5"></div>
 
@@ -516,7 +599,7 @@
             "The ancient museum in the heart of London houses numerous beautiful paintings and remarkable sculptures from the Renaissance."
         ];
 
-        // Demo with A2 typical learner errors
+        // Demo with typical learner errors
         const ERROR_DEMO_PRESETS = [
             "I want to go to America next year because I want study English. English is very important.",
             "She do not like coffee, but she like drink hot tea every morning with her mother.",
@@ -534,7 +617,12 @@
         let context = null;
         let analyser = null;
         let sourceNode = null;
-        const apiKey = ""; // Canvas auto-inject core key
+        
+        // Active grammar correction mode state ('easy', 'medium', 'hard')
+        let selectedCorrectionMode = 'easy';
+
+        // Dynamic client-side secure API Key Storage
+        let clientSavedApiKey = localStorage.getItem('student_gemini_api_key') || "";
         
         // Active Synonyms map for word replacer features
         let synonymMappingData = [];
@@ -561,7 +649,7 @@
         const replacementDetailBox = document.getElementById('replacement-detail-box');
         const replacementEmptyState = document.getElementById('replacement-empty-state');
 
-        // AI analysis Nodes (Focus: Friendly A2 Tutoring)
+        // AI analysis Nodes (Level Mode Support)
         const btnGetAnalysis = document.getElementById('btn-get-analysis');
         const analysisIcon = document.getElementById('analysis-icon');
         const analysisOutputContainer = document.getElementById('analysis-output-container');
@@ -574,9 +662,13 @@
         const analysisSlashed = document.getElementById('analysis-slashed');
         const analysisDictionary = document.getElementById('analysis-dictionary');
         const analysisGrammar = document.getElementById('analysis-grammar');
+        
+        const btnModeEasy = document.getElementById('btn-mode-easy');
+        const btnModeMedium = document.getElementById('btn-mode-medium');
+        const btnModeHard = document.getElementById('btn-mode-hard');
+        const analysisTitleText = document.getElementById('analysis-title-text');
 
         // Shadowing Evaluator Nodes
-        const shadowingTarget = document.getElementById('shadowing-target');
         const btnMic = document.getElementById('btn-mic');
         const btnMicText = document.getElementById('btn-mic-text');
         const micIcon = document.getElementById('mic-icon');
@@ -585,6 +677,7 @@
         const shadowingScoreDashboard = document.getElementById('shadowing-score-dashboard');
         const shadowingScoreNum = document.getElementById('shadowing-score-num');
         const shadowingFeedbackMessage = document.getElementById('shadowing-feedback-message');
+        const shadowingFeedbackRendered = document.getElementById('shadowing-feedback-rendered');
 
         // Status Card Nodes
         const statusCard = document.getElementById('status-card');
@@ -623,6 +716,18 @@
         const offlineTracksList = document.getElementById('offline-tracks-list');
         const btnPurgeDb = document.getElementById('btn-purge-db');
 
+        // API settings configuration nodes
+        const btnApiConfig = document.getElementById('btn-api-config');
+        const apiModal = document.getElementById('api-modal');
+        const btnCloseModal = document.getElementById('btn-close-modal');
+        const apiKeyInput = document.getElementById('api-key-input');
+        const btnToggleKeyVisibility = document.getElementById('btn-toggle-key-visibility');
+        const eyeIcon = document.getElementById('eye-icon');
+        const btnSaveKey = document.getElementById('btn-save-key');
+        const btnDeleteKey = document.getElementById('btn-delete-key');
+        const apiStatusBadge = document.getElementById('api-status-badge');
+        const apiStatusText = document.getElementById('api-status-text');
+
         // --- Initializing Database & Events Hooks ---
         window.addEventListener('DOMContentLoaded', () => {
             initIndexedDB();
@@ -630,6 +735,7 @@
             setupCanvasResizer();
             setupTabNavigation();
             setupSpeechRecognition();
+            setupApiConfiguration();
             
             // Set first demo text placeholder
             englishInput.value = DEMO_PRESETS[0];
@@ -682,9 +788,9 @@
                     const targetTab = trigger.getAttribute('data-tab');
 
                     triggers.forEach(t => {
-                        t.className = "tab-trigger flex-1 py-2 px-2 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 text-slate-400 hover:text-slate-200";
+                        t.className = "tab-trigger flex-1 py-2 px-1 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 text-slate-400 hover:text-slate-200";
                     });
-                    trigger.className = "tab-trigger flex-1 py-2 px-2 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+                    trigger.className = "tab-trigger flex-1 py-2 px-1 rounded-lg text-[10px] sm:text-xs font-bold transition flex items-center justify-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
 
                     contents.forEach(content => {
                         content.classList.remove('active');
@@ -698,7 +804,81 @@
             });
         }
 
-        // --- Designing Notifications helper ---
+        // API Config modal controls and persistence
+        function setupApiConfiguration() {
+            refreshApiStatusBadge();
+
+            btnApiConfig.addEventListener('click', () => {
+                apiKeyInput.value = clientSavedApiKey;
+                apiModal.classList.remove('hidden');
+            });
+
+            btnCloseModal.addEventListener('click', () => {
+                apiModal.classList.add('hidden');
+            });
+
+            apiModal.addEventListener('click', (e) => {
+                if (e.target === apiModal) {
+                    apiModal.classList.add('hidden');
+                }
+            });
+
+            btnToggleKeyVisibility.addEventListener('click', () => {
+                if (apiKeyInput.type === 'password') {
+                    apiKeyInput.type = 'text';
+                    eyeIcon.className = "fa-solid fa-eye-slash text-xs";
+                } else {
+                    apiKeyInput.type = 'password';
+                    eyeIcon.className = "fa-solid fa-eye text-xs";
+                }
+            });
+
+            btnSaveKey.addEventListener('click', () => {
+                const enteredKey = apiKeyInput.value.trim();
+                if (!enteredKey) {
+                    showNotification('キーが入力されていません。', 'error');
+                    return;
+                }
+                
+                clientSavedApiKey = enteredKey;
+                localStorage.setItem('student_gemini_api_key', enteredKey);
+                showNotification('APIキーをスマートフォン内部に安全に保存しました！', 'success');
+                apiModal.classList.add('hidden');
+                refreshApiStatusBadge();
+            });
+
+            btnDeleteKey.addEventListener('click', () => {
+                clientSavedApiKey = "";
+                localStorage.removeItem('student_gemini_api_key');
+                apiKeyInput.value = "";
+                showNotification('APIキーを消去しました。', 'info');
+                refreshApiStatusBadge();
+            });
+        }
+
+        function refreshApiStatusBadge() {
+            const inCanvas = (typeof __app_id !== 'undefined');
+
+            if (clientSavedApiKey) {
+                apiStatusBadge.classList.remove('hidden');
+                apiStatusBadge.className = "flex items-center gap-1 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-lg text-[10px] text-emerald-300 font-bold";
+                apiStatusText.textContent = "Myキー接続中";
+            } else if (inCanvas) {
+                apiStatusBadge.classList.remove('hidden');
+                apiStatusBadge.className = "flex items-center gap-1 bg-teal-500/10 border border-teal-500/20 px-2.5 py-1 rounded-lg text-[10px] text-teal-300 font-bold";
+                apiStatusText.textContent = "Canvas自動接続中";
+            } else {
+                apiStatusBadge.classList.remove('hidden');
+                apiStatusBadge.className = "flex items-center gap-1 bg-rose-500/10 border border-rose-500/20 px-2.5 py-1 rounded-lg text-[10px] text-rose-300 font-bold";
+                apiStatusText.textContent = "キー未設定";
+            }
+        }
+
+        function getWorkingApiKey() {
+            return clientSavedApiKey || "";
+        }
+
+        // Designing Notifications helper
         function showNotification(message, type = 'success') {
             const toast = document.createElement('div');
             toast.className = `flex items-center gap-2 px-3.5 py-2.5 rounded-xl shadow-lg border text-[11px] transform translate-y-2 opacity-0 transition-all duration-300 max-w-sm ${
@@ -728,7 +908,7 @@
             }, 3500);
         }
 
-        // --- Binding User Interface Controls ---
+        // Binding User Interface Controls
         function setupEventListeners() {
             let demoIndex = 0;
             btnDemo.addEventListener('click', () => {
@@ -743,7 +923,7 @@
                 errorDemoIndex = (errorDemoIndex + 1) % ERROR_DEMO_PRESETS.length;
                 englishInput.value = ERROR_DEMO_PRESETS[errorDemoIndex];
                 updateShadowingTargetDisplay();
-                showNotification('学習用の間違いを含む英文をセットしました。「添削＆解説」タブでお試しください。', 'info');
+                showNotification('学習用の間違いを含む英文をセットしました。添削タブでお試しください。', 'info');
             });
 
             btnClear.addEventListener('click', () => {
@@ -752,7 +932,6 @@
                 showNotification('テキストエリアをクリアしました。', 'info');
             });
 
-            // Sync original text input edits directly to Shadowing visual target
             englishInput.addEventListener('input', updateShadowingTargetDisplay);
 
             voiceCards.forEach(btn => {
@@ -775,12 +954,41 @@
             btnScanSynonyms.addEventListener('click', handleVocabularyScanning);
             btnGetAnalysis.addEventListener('click', handleAIEnglishAnalysis);
 
+            // Large, easy-to-tap Apply button
             btnApplyCorrection.addEventListener('click', () => {
                 if (lastSuggestedCorrectText) {
                     englishInput.value = lastSuggestedCorrectText;
                     updateShadowingTargetDisplay();
-                    showNotification('やさしい修正文をテキストエリアに反映しました。そのまま音声生成できます！', 'success');
+                    showNotification('添削後の英文をメイン入力欄に反映しました！そのまま音声生成や発音練習が可能です。', 'success');
                 }
+            });
+
+            // Level mode switcher listeners (3 Stages: easy, medium, hard)
+            btnModeEasy.addEventListener('click', () => {
+                selectedCorrectionMode = 'easy';
+                btnModeEasy.className = "py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+                btnModeMedium.className = "py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-slate-900 text-slate-400 border border-slate-800";
+                btnModeHard.className = "py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-slate-900 text-slate-400 border border-slate-800";
+                analysisTitleText.textContent = "AI 初級ベース型やさしい添削 ＆ 解説";
+                showNotification('添削モードを「初級 Easy」に変更しました。');
+            });
+
+            btnModeMedium.addEventListener('click', () => {
+                selectedCorrectionMode = 'medium';
+                btnModeMedium.className = "py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-teal-500/20 text-teal-300 border border-teal-500/30";
+                btnModeEasy.className = "py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-slate-900 text-slate-400 border border-slate-800";
+                btnModeHard.className = "py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-slate-900 text-slate-400 border border-slate-800";
+                analysisTitleText.textContent = "AI 中級ベース型標準添削 ＆ コネクション解説";
+                showNotification('添削モードを「中級 Medium」に変更しました。');
+            });
+
+            btnModeHard.addEventListener('click', () => {
+                selectedCorrectionMode = 'hard';
+                btnModeHard.className = "py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30";
+                btnModeEasy.className = "py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-slate-900 text-slate-400 border border-slate-800";
+                btnModeMedium.className = "py-2 px-1 rounded-lg text-[10px] font-bold transition flex flex-col sm:flex-row items-center justify-center gap-1 bg-slate-900 text-slate-400 border border-slate-800";
+                analysisTitleText.textContent = "AI 上級ベース型実践添削 ＆ 応用表現指導";
+                showNotification('添削モードを「上級 Hard」に変更しました。');
             });
 
             speedSlider.addEventListener('input', () => {
@@ -804,7 +1012,7 @@
 
                     speedSlider.value = targetSpeed;
                     setPlaybackSpeed(targetSpeed);
-                    showNotification(`再生スピードを ${targetSpeed}x に変更しました（追加通信なし）。`);
+                    showNotification(`再生スピードを ${targetSpeed}x に調整しました。`);
                 });
             });
 
@@ -826,8 +1034,17 @@
 
         // --- Integrating LLM Gemini Client ---
         async function callGeminiTextModel(prompt, systemPrompt = "") {
-            // Use standard 'gemini-3-flash-preview' model as mandated by instructions
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const currentApiKey = getWorkingApiKey();
+            const inCanvas = (typeof __app_id !== 'undefined');
+
+            if (!currentApiKey && !inCanvas) {
+                apiModal.classList.remove('hidden');
+                throw new Error("APIキーが設定されていません。右上の「APIキー設定」から保存してください。");
+            }
+
+            // Always use mandated gemini-3-flash-preview model for high-speed reliable parsing
+            const apiKeyToPass = currentApiKey || "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKeyToPass}`;
 
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }]
@@ -869,7 +1086,7 @@
             }
         }
 
-        // --- Mappings Synonyms AI Agent ---
+        // Mappings Synonyms AI Agent - Constrained to natural casual learner-friendly output + STRICT collocations check
         async function handleVocabularyScanning() {
             const rawText = englishInput.value.trim();
             if (!rawText) {
@@ -879,17 +1096,22 @@
 
             btnScanSynonyms.disabled = true;
             scanIcon.className = "fa-solid fa-arrows-spin animate-spin";
-            showNotification('Gemini AIが置き換え可能な語彙を分析中...', 'info');
+            showNotification('Gemini AIが前後の結びつきに完全に適合する自然な日常類義語を分析中...', 'info');
 
-            const systemPrompt = `You are an elite ESL instructor. Analyze the user's English text and find 3 or 4 significant words that could be replaced with synonyms. Provide 2 to 4 high-quality alternatives with a brief Japanese explanation.
+            const systemPrompt = `You are a warm, highly practical ESL instructor. Analyze the user's English text and select 3 or 4 significant words that can be replaced with synonyms.
+CRITICAL COLLOCATION RULE: The suggested alternatives MUST fit perfectly into the original sentence's syntactic context. 
+They MUST NOT break the grammatical or idiomatic agreement with adjacent words (verbs, nouns, prepositions directly next to them). 
+DO NOT suggest any synonyms that sound awkward, forced, or grammatically incorrect when combined with the surrounding words. 
+Every alternative suggestion must be highly natural, commonly used in daily conversation, and appropriate for ESL learners.
+
 You MUST respond strictly with a valid JSON array matching the schema below. Do not wrap in markdown code blocks.
 
 Schema:
 [
   {
     "originalWord": "word in text",
-    "alternatives": ["synonym1", "synonym2"],
-    "explanation": "Japanese explanation."
+    "alternatives": ["highly natural context-appropriate synonym 1", "highly natural context-appropriate synonym 2"],
+    "explanation": "Japanese explanation explaining why these synonyms fit beautifully with the adjacent words (collocations) in this specific sentence."
   }
 ]`;
 
@@ -901,13 +1123,13 @@ Schema:
                 if (Array.isArray(parsedMappings) && parsedMappings.length > 0) {
                     synonymMappingData = parsedMappings;
                     renderInteractiveSynonymsUI(rawText);
-                    showNotification('類義語候補の分析が完了しました！');
+                    showNotification('コロケーションを考慮した日常類義語が見つかりました！');
                 } else {
-                    throw new Error("十分な置き換え対象単語を検出できませんでした。");
+                    throw new Error("置き換えに適した単語が検出されませんでした。");
                 }
             } catch (err) {
                 console.error(err);
-                showNotification('類義語の抽出に失敗しました。', 'error');
+                showNotification(err.message || '類義語の抽出に失敗しました。', 'error');
             } finally {
                 btnScanSynonyms.disabled = false;
                 scanIcon.className = "fa-solid fa-arrows-spin";
@@ -956,29 +1178,32 @@ Schema:
             if (!dataItem) return;
 
             document.querySelectorAll('.replaceable-word').forEach(el => {
-                el.style.backgroundColor = 'rgba(16, 185, 129, 0.08)';
+                el.style.backgroundColor = 'rgba(16, 185, 129, 0.12)';
             });
-            elementNode.style.backgroundColor = 'rgba(16, 185, 129, 0.3)';
+            elementNode.style.backgroundColor = 'rgba(16, 185, 129, 0.35)';
 
             replacementDetailBox.classList.remove('hidden');
             
+            // IMPROVED: Significantly enlarged replacement buttons with extensive touch target sizes (py-3 px-4, text-sm)
             const buttonsHtml = dataItem.alternatives.map(alt => `
-                <button class="btn-substitute-word px-2 py-1 bg-emerald-500/10 hover:bg-emerald-500 hover:text-slate-950 rounded text-emerald-400 font-bold transition-all text-[11px]" data-original="${dataItem.originalWord}" data-new="${alt}">
+                <button class="btn-substitute-word flex-1 min-w-[110px] py-3 px-4 bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white font-extrabold rounded-xl transition-all text-xs shadow-md shadow-emerald-700/10" data-original="${dataItem.originalWord}" data-new="${alt}">
                     ${alt}
                 </button>
             `).join('');
 
             replacementDetailBox.innerHTML = `
-                <div class="flex justify-between items-center mb-1 border-b border-slate-900 pb-1">
-                    <span class="font-bold text-slate-300">「${dataItem.originalWord}」の類義語</span>
-                    <span class="text-[9px] text-slate-500 font-medium">選択すると即座に文が置き換わります</span>
+                <div class="flex flex-col gap-2 p-1.5 bg-slate-900 rounded-xl border border-slate-800">
+                    <div class="flex justify-between items-center mb-0.5 border-b border-slate-800 pb-1.5">
+                        <span class="font-bold text-slate-300">「${dataItem.originalWord}」のコロケーション適正類義語</span>
+                        <span class="text-[9px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded">タップで即置換</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2 py-1">
+                        ${buttonsHtml}
+                    </div>
+                    <p class="text-[11px] text-slate-300 bg-slate-950 p-2.5 rounded-lg leading-relaxed mt-1">
+                        <i class="fa-solid fa-circle-question text-emerald-400 mr-1.5"></i><b>組み合わせ解説:</b> ${dataItem.explanation}
+                    </p>
                 </div>
-                <div class="flex flex-wrap gap-1.5 py-1">
-                    ${buttonsHtml}
-                </div>
-                <p class="text-[9px] text-slate-400 mt-0.5 leading-relaxed">
-                    <i class="fa-solid fa-lightbulb text-emerald-400 mr-1"></i>${dataItem.explanation}
-                </p>
             `;
 
             document.querySelectorAll('.btn-substitute-word').forEach(btn => {
@@ -999,11 +1224,11 @@ Schema:
             englishInput.value = paragraph;
             updateShadowingTargetDisplay();
 
-            showNotification(`「${oldWord}」を「${replacement}」に置き換えました！`);
+            showNotification(`「${oldWord}」を自然な接続表現「${replacement}」に置き換えました！`);
             handleVocabularyScanning();
         }
 
-        // --- Integrating friendly A2 Grammar & Translation AI Analyzer ---
+        // Multi-level adaptive English Grammar & Translation AI Analyzer with STRICT base text respect rule
         async function handleAIEnglishAnalysis() {
             const rawText = englishInput.value.trim();
             if (!rawText) {
@@ -1013,75 +1238,114 @@ Schema:
 
             btnGetAnalysis.disabled = true;
             analysisIcon.className = "fa-solid fa-wand-magic-sparkles animate-spin";
-            showNotification('AIコーチがA2向けのやさしいアドバイスを構成中...', 'info');
+            
+            let currentModeLabel = "初級 A1/A2";
+            if (selectedCorrectionMode === 'medium') currentModeLabel = "中級 B1";
+            if (selectedCorrectionMode === 'hard') currentModeLabel = "上級 B2/C1";
+            
+            showNotification(`AIコーチが 【${currentModeLabel}】 の添削アドバイス（ベース尊重型）を生成中...`, 'info');
 
-            const systemPrompt = `You are a supportive, warm, and highly skilled ESL tutor specializing in teaching Japanese learners at the CEFR A2 level (junior high/basic high school level).
-Your task is to analyze the user's English text, identify any grammar mistakes, and provide constructive feedback without causing cognitive overload or discouraging them.
+            // Fundamental prompt enforcing minimal modification
+            const commonBaseInstruction = `
+ABSOLUTE CRITICAL PEDAGOGICAL RULE:
+- You are correcting the user's English, but you MUST respect their original phrasing, vocabulary, and sentence structure.
+- DO NOT completely rewrite, reconstruct, or reorganize the sentence into a fundamentally different structure.
+- Keep the user's intended sentence flow and word choices as much as humanly possible.
+- Only fix clear grammatical mistakes, awkward preposition usages, spelling errors, or minor unnatural word combinations.
+- The resulting "corrected" sentence must look like the user's original sentence with only the necessary parts polished.
+`;
 
-Follow these strict pedagogical rules:
-1. "Praise first" (praise): Begin with a warm, encouraging message in Japanese. Praise their effort and summarize the good parts of their sentence so they feel confident.
-2. "Keep it A2 Level" (corrected): Provide a corrected version of their English text. This corrected text MUST NOT exceed CEFR A2 level. Avoid advanced idioms, high-level vocabulary, or complex structures (like inversion, subjunctive mood, relative clauses without relative pronouns, etc.). Make it sound extremely natural yet basic so they can easily memorize and use it.
-3. "Focus and Limit Corrections" (grammar): Identify at most 2 critical grammatical errors appropriate for an A2 learner (such as third-person singular 's', basic tense agreement, simple prepositions, or basic verb forms). Explain them gently in friendly Japanese. DO NOT comment on minor nuances, rare stylistic preferences, or complex punctuation, to prevent discouraging the student. If there are no errors, explain 1 or 2 positive highlights about their grammar.
-4. "A2 Vocab dictionary" (dictionary): Select 2-3 key basic words or phrases from the corrected version and provide their meanings in Japanese.
-5. "Natural Japanese Translation" (translation): Provide a natural, easy-to-understand Japanese translation.
-6. "Slash Reading Guide" (slashed): Provide a slash reading breakdown of the corrected sentence with Japanese meaning in brackets to promote "direct English brain" reading.
+            let pedagogyPrompt = "";
+            if (selectedCorrectionMode === 'easy') {
+                pedagogyPrompt = `You are a supportive, warm ESL tutor specializing in Japanese beginners (CEFR A1-A2).
+${commonBaseInstruction}
+Easy-Mode Rules:
+1. Praise first: Deliver a very sweet, encouraging message in Japanese (Acknowledge and praise 1 positive aspect of their phrasing).
+2. Minimal A1-A2 Correction: Correct grammatical errors using vocabulary and structures familiar to basic learners. Keep it extremely simple.
+3. Easy-Mode Focus Advice: Point out at most 1 or 2 essential basic grammatical errors (e.g., singular/plural, standard時制).
+4. Mini dictionary: Explain 2 basic words/phrases used.
+5. Simple translation: Simple Japanese translation.
+6. Easy slash guide: Basic slash reading guide.`;
+            } else if (selectedCorrectionMode === 'medium') {
+                pedagogyPrompt = `You are an encouraging ESL writing coach specializing in intermediate Japanese learners (CEFR B1).
+${commonBaseInstruction}
+Medium-Mode Rules:
+1. Constructive praise: Provide balanced feedback in Japanese (Praise the logical clarity or vocabulary selection).
+2. Natural B1 Correction: Polish the sentence slightly to make it flow naturally like standard daily/business conversational English, keeping their structure fully intact.
+3. Focus Advice: Explain 1 or 2 key grammar or collocation improvements (especially correct natural verb-noun combinations or preposition choices) in Japanese.
+4. Mini dictionary: Detail 2 intermediate words/collocations used.
+5. Natural translation: Clear, natural Japanese translation.
+6. Slash guide: Phase-by-phrase slash reading breakdown.`;
+            } else {
+                pedagogyPrompt = `You are an elite academic ESL writing coach for upper-intermediate to advanced Japanese learners (CEFR B2-C1).
+${commonBaseInstruction}
+Hard-Mode Rules:
+1. Rigorous critique: Provide a highly intellectual critique in Japanese (Praise their advanced nuance or structure, then analyze stylistic choices).
+2. Advanced Polished Correction: Polish the English sentence to sound elegant, precise, and idiomatic. While maintaining their structure, substitute slightly higher-register vocabulary or collocations.
+3. Deep Linguistic Advice: Explain the stylistic differences, formal vs. informal registers, and complex syntactic collocations in clear Japanese.
+4. Advanced dictionary: Detail 2-3 advanced collocations/idioms.
+5. Polished translation: Elegant, beautifully polished Japanese translation.
+6. Advanced slash guide: Professional sentence slash reading guide.`;
+            }
 
+            const promptToEvaluate = `User's English input: "${rawText}"`;
+
+            const systemPrompt = `${pedagogyPrompt}
 You MUST respond strictly with a valid JSON object matching the schema below. Do not wrap in markdown backticks.
 
 Schema:
 {
-  "praise": "AIコーチからの温かい褒め言葉メッセージ（日本語）...",
-  "corrected": "Corrected version constrained strictly to A2 level English...",
-  "translation": "修正後の英文の自然な日本語対訳...",
-  "slashed": "Slash reading guide for corrected text (e.g. I went to the library / (私は図書館に行きました) to borrow a book / (本を借りるために))",
+  "praise": "AIコーチからのレベルに応じたメッセージ（日本語）...",
+  "corrected": "Polished English text following the strict base-respect constraints...",
+  "translation": "日本語訳...",
+  "slashed": "Slash reading guide...",
   "dictionary": [
-    {"word": "word/phrase", "meaning": "意味"}
+    {"word": "word/phrase", "meaning": "意味・使い方"}
   ],
-  "grammar": "今回のやさしい解説（最大2つの文法ポイント。優しい日本語で解説。改行可。)..."
+  "grammar": "文法ポイント・改善アドバイス解説（改行可）..."
 }`;
 
             try {
-                const responseText = await callGeminiTextModel(rawText, systemPrompt);
+                const responseText = await callGeminiTextModel(promptToEvaluate, systemPrompt);
                 let cleanJsonString = cleanJsonMarkdown(responseText);
                 const data = JSON.parse(cleanJsonString);
 
-                // Save corrected text in state for applying
                 lastSuggestedCorrectText = data.corrected || rawText;
 
                 // Render dynamic views
                 analysisEmptyState.classList.add('hidden');
                 analysisOutputContainer.classList.remove('hidden');
 
-                analysisPraiseText.textContent = data.praise || "素晴らしいチャレンジです！一緒に楽しく英語を学びましょう。";
+                analysisPraiseText.textContent = data.praise || "素晴らしいチャレンジです！";
                 analysisOriginalText.textContent = rawText;
                 analysisCorrectedText.textContent = data.corrected || rawText;
-                analysisTranslation.textContent = data.translation || "和訳の取得に失敗しました。";
-                analysisSlashed.textContent = data.slashed || "スラッシュリーディングの構成に失敗しました。";
-                analysisGrammar.innerHTML = (data.grammar || "素晴らしい英語です！特に修正の必要はありません。").replace(/\n/g, '<br>');
+                analysisTranslation.textContent = data.translation || "訳を取得できませんでした。";
+                analysisSlashed.textContent = data.slashed || "スラッシュリーディングを構成できませんでした。";
+                analysisGrammar.innerHTML = (data.grammar || "修正箇所はありません。素晴らしい表現です！").replace(/\n/g, '<br>');
 
                 // Dictionary rendering
                 if (data.dictionary && Array.isArray(data.dictionary)) {
                     analysisDictionary.innerHTML = data.dictionary.map(item => `
-                        <div class="p-1.5 bg-slate-900 border border-slate-850 rounded-lg">
-                            <span class="font-bold text-emerald-400 font-mono text-[11px]">${item.word}</span>
-                            <span class="text-slate-400 block text-[10px] mt-0.5">${item.meaning}</span>
+                        <div class="p-2 bg-slate-900 border border-slate-850 rounded-lg">
+                            <span class="font-bold text-emerald-400 font-mono text-xs">${item.word}</span>
+                            <span class="text-slate-400 block text-[11px] mt-0.5">${item.meaning}</span>
                         </div>
                     `).join('');
                 } else {
                     analysisDictionary.innerHTML = `<span class="text-slate-600">語彙データなし</span>`;
                 }
 
-                showNotification('やさしい添削＆解説の生成に成功しました！');
+                showNotification('添削＆レベル別アドバイス（ベース尊重型）の構成が完了しました！');
             } catch (err) {
                 console.error(err);
-                showNotification('添削データの生成に失敗しました。', 'error');
+                showNotification(err.message || '添削データの生成に失敗しました。', 'error');
             } finally {
                 btnGetAnalysis.disabled = false;
                 analysisIcon.className = "fa-solid fa-wand-magic-sparkles";
             }
         }
 
-        // --- Integrating Web Speech Shadowing Recognition ---
+        // Web Speech Shadowing Recognition & Interactive Colored Highlight feedback
         function setupSpeechRecognition() {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
@@ -1099,7 +1363,7 @@ Schema:
 
             recognition.onstart = () => {
                 isRecording = true;
-                btnMic.className = "w-full py-2.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded-lg font-bold flex items-center justify-center gap-1.5 transition text-xs active:scale-[0.98] cursor-pointer";
+                btnMic.className = "w-full py-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 border border-rose-500/30 rounded-lg font-bold flex items-center justify-center gap-1.5 transition text-xs active:scale-[0.98] cursor-pointer";
                 micIcon.className = "fa-solid fa-microphone text-sm text-rose-500 animate-pulse";
                 btnMicText.textContent = "音読中... マイクに向かって話してください";
                 micStatus.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping mr-1"></span> 録音中...`;
@@ -1113,7 +1377,7 @@ Schema:
                 micResultBox.classList.remove('text-slate-500');
                 micResultBox.classList.add('text-white');
 
-                evaluateShadowingScore(speechResult);
+                evaluateAndHighlightShadowing(speechResult);
             };
 
             recognition.onerror = (e) => {
@@ -1142,7 +1406,7 @@ Schema:
 
         function resetMicButtonState() {
             isRecording = false;
-            btnMic.className = "w-full py-2.5 bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 rounded-lg font-bold flex items-center justify-center gap-1.5 transition text-xs active:scale-[0.98] cursor-pointer";
+            btnMic.className = "w-full py-3 bg-slate-900 hover:bg-slate-850 text-slate-300 border border-slate-800 rounded-lg font-bold flex items-center justify-center gap-1.5 transition text-xs active:scale-[0.98] cursor-pointer";
             micIcon.className = "fa-solid fa-microphone text-emerald-500";
             btnMicText.textContent = "マイクをオンにして音読";
             micStatus.innerHTML = `<span class="w-1 h-1 bg-slate-700 rounded-full mr-1"></span> 待機中`;
@@ -1151,38 +1415,52 @@ Schema:
         function updateShadowingTargetDisplay() {
             const raw = englishInput.value.trim();
             if (raw) {
-                shadowingTarget.textContent = raw;
+                // Keep the target view loaded
+                if (shadowingFeedbackRendered.innerHTML.includes('italic')) {
+                     shadowingFeedbackRendered.innerHTML = `<span class="text-slate-400 font-mono">${raw}</span>`;
+                }
             } else {
-                shadowingTarget.textContent = "(上のテキストエリアに入力した英語が判定対象になります)";
+                shadowingFeedbackRendered.innerHTML = `<span class="text-slate-500 italic">マイクで音読すると、うまく読めた部分が「緑」、聞き取れなかった部分が「赤」でハイライト表示されます。</span>`;
             }
         }
 
-        // Compare target versus spoken words to calculate pronunciation match accuracy
-        function evaluateShadowingScore(spokenText) {
-            const original = englishInput.value.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
-            const spoken = spokenText.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "");
+        // IMPROVED: High-proximity highlight mapping analyzer for student feedback
+        function evaluateAndHighlightShadowing(spokenText) {
+            const targetString = englishInput.value.trim();
+            if (!targetString) return;
 
-            const origWords = original.split(/\s+/).filter(w => w.length > 0);
-            const spokWords = spoken.split(/\s+/).filter(w => w.length > 0);
+            // Normalize helper
+            const cleanWord = (w) => w.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").trim();
 
-            if (origWords.length === 0) return;
+            const targetWords = targetString.split(/\s+/);
+            const spokenWordsNormalized = spokenText.split(/\s+/).map(w => cleanWord(w)).filter(w => w.length > 0);
 
-            // Simple intersection & edit distance hybrid score logic
-            let matches = 0;
-            origWords.forEach(word => {
-                if (spokWords.includes(word)) {
-                    matches++;
+            let matchesCount = 0;
+            let renderedHtml = "";
+
+            targetWords.forEach(word => {
+                const normalizedWord = cleanWord(word);
+                // Check if spoken result includes the normalized target word
+                if (spokenWordsNormalized.includes(normalizedWord)) {
+                    matchesCount++;
+                    renderedHtml += `<span class="text-emerald-400 font-extrabold px-1 inline-block transition-all hover:scale-105 duration-200">${word}</span> `;
+                } else {
+                    renderedHtml += `<span class="text-rose-400 font-extrabold px-1 underline decoration-2 decoration-rose-500/80 inline-block transition-all hover:scale-105 duration-200" title="うまく聞き取れませんでした">${word}</span> `;
                 }
             });
 
-            // Calculate overall percentage score
-            let score = Math.round((matches / origWords.length) * 100);
+            // Update interactive feedback renderer
+            shadowingFeedbackRendered.innerHTML = renderedHtml;
+
+            // Calculate overall matching accuracy
+            const origTotalLength = targetWords.filter(w => cleanWord(w).length > 0).length;
+            let score = Math.round((matchesCount / origTotalLength) * 100);
             if (score > 100) score = 100;
 
             shadowingScoreDashboard.classList.remove('hidden');
             shadowingScoreNum.textContent = score;
 
-            // Colorize based on score quality (Tailored with warm motivation for A2)
+            // Supportively scale feedback
             if (score >= 90) {
                 shadowingScoreNum.className = "text-xl font-extrabold text-emerald-400 leading-none";
                 shadowingFeedbackMessage.textContent = "素晴らしい発音です！モデル音声をきれいに再現できています。自信を持ってこの調子で続けましょう！";
@@ -1191,18 +1469,27 @@ Schema:
                 shadowingFeedbackMessage.textContent = "とても上手です！英語のリズムがよく掴めています。スピードを落としてゆっくり発音するのも効果的です。";
             } else if (score >= 40) {
                 shadowingScoreNum.className = "text-xl font-extrabold text-amber-400 leading-none";
-                shadowingFeedbackMessage.textContent = "ナイス挑戦！聞き取りやすい発音です。ボイスモデルの音をもう一度よく聞いて真似を繰り返してみましょう。";
+                shadowingFeedbackMessage.textContent = "ナイス挑戦！赤くなった単語をボイスモデルの音をもう一度よく聞いて真似を繰り返してみましょう。";
             } else {
                 shadowingScoreNum.className = "text-xl font-extrabold text-rose-400 leading-none";
                 shadowingFeedbackMessage.textContent = "一歩ずつ進みましょう。「なめらかスロー」(0.8x) に設定して、ゆっくり声に出してみてください。";
             }
         }
 
-        // --- Processing Speech Engine Core Actions ---
+        // Processing Speech Engine Core Actions
         async function generateSpeechAction() {
             const textToSpeak = englishInput.value.trim();
             if (!textToSpeak) {
                 showNotification('音声に変換する英語のテキストを入力してください。', 'error');
+                return;
+            }
+
+            const currentApiKey = getWorkingApiKey();
+            const inCanvas = (typeof __app_id !== 'undefined');
+
+            if (!currentApiKey && !inCanvas) {
+                apiModal.classList.remove('hidden');
+                showNotification('音声の生成に失敗しました。APIキーを設定してください。', 'error');
                 return;
             }
 
@@ -1219,7 +1506,9 @@ Schema:
 
                 const assembledPrompt = `${accentGuideline}\n\n${textToSpeak}`;
 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
+                // Fetch using custom key or canvas auto key
+                const apiToUse = currentApiKey || "";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiToUse}`;
 
                 const payload = {
                     contents: [{
@@ -1277,11 +1566,11 @@ Schema:
                     loadTrackToPlayer(activeAudioUrl, truncatedTitle, metaLabel);
                     
                     showStatusDisplay('完了しました！', 100);
-                    showNotification('音声が生成されました。再生スピードをお試しください。');
+                    showNotification('音声が生成されました。スピード調整をお試しください。');
                     setTimeout(hideStatusDisplay, 1200);
 
                 } else {
-                    throw new Error("音声データのパースに失敗しました。自動認証エラーが発生した可能性があります。");
+                    throw new Error("音声データのパースに失敗しました。キーが無効、またはアクセス制限がかかっています。");
                 }
 
             } catch (err) {
@@ -1328,14 +1617,13 @@ Schema:
             return new Blob([buffer], { type: 'audio/wav' });
         }
 
-        // Helper string to buffer
         function writeStringToView(view, offset, str) {
             for (let i = 0; i < str.length; i++) {
                 view.setUint8(offset + i, str.charCodeAt(i));
             }
         }
 
-        // --- Managing Audio Playback Actions ---
+        // Managing Audio Playback Actions
         function setupAudioEngine() {
             btnPlayPause.addEventListener('click', () => {
                 if (realAudio.paused) {
@@ -1487,7 +1775,8 @@ Schema:
             if (context) return;
 
             try {
-                context = new (window.AudioContext || window.webkitAudioContext)();
+                // FIXED: Set playback latencyHint preference to completely stabilize WebAudio streaming under extreme rate stretches
+                context = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'playback' });
                 analyser = context.createAnalyser();
                 analyser.fftSize = 256;
 
@@ -1499,7 +1788,7 @@ Schema:
             }
         }
 
-        // --- Drawing Soundwave Visualizer Canvas ---
+        // Drawing Soundwave Visualizer Canvas
         function startDynamicVisualizer() {
             if (!analyser) return;
 
@@ -1580,7 +1869,7 @@ Schema:
             ctx.stroke();
         }
 
-        // --- Implementing Offline Database Operations ---
+        // Implementing Offline Database Operations
         function saveActiveTrackToOfflineDB() {
             if (!database || !activeAudioBlob || !activeTextString) {
                 showNotification('保存するアクティブな音声データがありません。', 'error');
@@ -1722,7 +2011,7 @@ Schema:
             };
         }
 
-        // --- Helper Helpers UI Units ---
+        // Helper Helpers UI Units
         function formatPlayDuration(secs) {
             const mins = Math.floor(secs / 60);
             const remainingSecs = Math.floor(secs % 60);
